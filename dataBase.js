@@ -155,6 +155,85 @@ function getAllBooks(call){
 			console.log(err);
 			throw err;
 		}
-		user.find({});
+		call(book.find({}).toArray());
+	});
+}
+
+//ЕСЛИ ДЛЯ ИДЕНИФИКАЦИИ БУДЕТ ИСПОЛЬЗОВАТЬСЯ ЧТО-ТО ДРУГОЕ, НАПИШИТЕ - Я ПОМЕНЯЮ!!!!!
+//функция для получения id книги по ее названию и автору
+//id будет нужен при создании документа о заказе
+//в функцию передаются: bookName - назвние книги, для которой происходит поиск; bookAuthor - автор книги, для которой происходит поиск
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается полученный id (в виде строки)
+function getBookId(bookName, bookAuthor, call){
+	var query = {name: bookName, author: bookAuthor};
+	mongoClient.connect(function(err, db){
+		if(err){
+			console.log(err);
+			throw err;
+		}
+		book.findOne(query, function(err, res) {
+								if (err) {
+									console.log(err);
+									throw err;
+								}
+								call(res._id);
+						  });
+	});
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////Работа с заказами//////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+//функция для добавления нового заказа
+//в функцию передаются: userId - id пользователя, который заказывает книгу; bookId - id книги, которую заказывает пользователь
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call ничего не передается
+function addOrder(userId, bookId, call){
+	var newData = {id_user: user_id, id_book: bookId, date: new Date()}; //формирование объекта с данными о новом заказе
+	mongoClient.connect(function(err, db){
+		if(err){
+			console.log(err);
+			throw err;
+		}
+		//запись нового заказа в коллекцию ordre
+		order.insertOne(newData, function(err, res){
+										if (err){
+											console.log(err);
+											throw err;
+										}
+										call();
+								});
+	});
+}
+
+//функция для получения всех заказов определенного пользователя
+//в функцию передаются: userId - id пользователя, все заказы которого нужно получить
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается массив (Array) с заказами
+function getUserOrder(userId, call){
+	var query = {id_user: userId};
+	mongoClient.connect(function(err, db){
+		if(err){
+			console.log(err);
+			throw err;
+		}
+		call(order.find(query).toArray());
+	});
+}
+
+//функция для получения всех заказов, хранящихся в БД
+//в функцию передаются:
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается массив (Array) с заказами
+function getAllOrders(call){
+	mongoClient.connect(function(err, db){
+		if(err){
+			console.log(err);
+			throw err;
+		}
+		call(book.find({}).toArray());
 	});
 }
