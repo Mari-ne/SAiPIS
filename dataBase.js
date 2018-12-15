@@ -20,6 +20,10 @@
 
 //все функции посленим параметром имеют callback'и, т.к. все они асинхронны
 
+/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////Работа с БД/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
 const MongoClient = require("mongodb").MongoClient; //модуль для работы с MongoDB
 var dbURL = "mongodb://localhost:27017";
 var dataBase = null; //будет хранить объект базы данных
@@ -234,6 +238,19 @@ function getAllOrders(call){
 			console.log(err);
 			throw err;
 		}
-		call(book.find({}).toArray());
+		call(order.aggregate([{
+			$lookup:{
+					from: "user",  //с какой таблицей объединять
+					localField: "id_user", //название поля в целевой ьаблице (order)
+					foreignField: "_id", //название поля в таблице-источнике (user)
+					as: "UO"
+				}
+		}, {
+			$replaceRoot: {newRoot: {$mergeObjects: [{$arrayElemAt: [ "$UO", 0 ] }, "$$ROOT" ] } }
+		}, {
+			$project: { UO: 0 }
+		}]));
+		
 	});
 }
+
