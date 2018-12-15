@@ -23,7 +23,7 @@
 /////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////Работа с БД/////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
-
+var fs = require("fs"); //модуль для работы с файловой системой
 const MongoClient = require("mongodb").MongoClient; //модуль для работы с MongoDB
 var dbURL = "mongodb://localhost:27017";
 var dataBase = null; //будет хранить объект базы данных
@@ -39,11 +39,37 @@ mongoClient.connect(function(err, db){
 		throw err;
 	}
 	dataBase = db.db("library"); //получение базы данных library
-	user = dataBase.collection("user"); //получение коллекции user
-	book = dataBase.collection("book"); // получение коллекции book
-	order = dataBase.collection("order"); // получение коллекции order
-	//TODO: первоначальная инициализация данных базы
+	user = dataBase.createCollection("user"); //получение коллекции user
+	initFill("user");
+	book = dataBase.createCollection("book"); // получение коллекции book
+	initFill("book");
+	order = dataBase.createCollection("order"); // получение коллекции order
+	test1();
 });
+
+//заполнение БД данными из json файлов
+//в функцию передается: collect - название коллекции, которую необходимо заполнить изначальными данными
+function initFill(collect){
+	//считывается файл resources\\user.json
+	fs.readFile("resources\\" + collect + ".json", function(err, data){
+		//полученные из файла данные переводятся в строку (toString), затем эта строка превращается json форму (JSON.parse)
+		//json файл имее структуру <название_таблицы>:[{}, {}, ...], поэтому получаем значение хранящееся в свойстве <название_таблицы>
+		//т.к. это значение - массив (Array), то для него применима функция map, которая позволяет перебрать весь массив поэлементно
+		//каждый из элементов массива будет записан в базу
+		JSON.parse(data.toString())[collect].map(function(item){
+			switch(collect){
+				case "user": {
+					addUser(item.login, item.password, item.email, function(){console.log("add");});
+					break;
+				}
+				case "book":{
+					addBook(item.name, item.author, item.annotation, item.description, function(){console.log("add");});
+					break;
+				}
+			}
+		});
+	});	
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////Работа с пользователями//////////////////////////////////////
@@ -186,6 +212,27 @@ function getBookId(bookName, bookAuthor, call){
 	});
 }
 
+//функция добавления новой книги
+//в функцию передаются: bookName - название новой книги; bookAuthor - автор новой книги; bookAnnotation - аннотация новой книги; bookDescription - описание новой книги
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call ничего не передается
+function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
+	var newData = {name: bookName, author: bookAuthor, annotation: bookAnnotation, description: bookDescription}; //формирование объекта с данными о новой книге
+	mongoClient.connect(function(err, db){
+		if(err){
+			console.log(err);
+			throw err;
+		}
+		//запись нового пользователя в коллекцию user
+		book.insertOne(newData, function(err, res){
+										if (err){
+											console.log(err);
+											throw err;
+										}
+										call();
+								});
+	});
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////Работа с заказами//////////////////////////////////////////
@@ -196,13 +243,13 @@ function getBookId(bookName, bookAuthor, call){
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call ничего не передается
 function addOrder(userId, bookId, call){
-	var newData = {id_user: user_id, id_book: bookId, date: new Date()}; //формирование объекта с данными о новом заказе
+	var newData = {id_user: userId, id_book: bookId, date: new Date()}; //формирование объекта с данными о новом заказе
 	mongoClient.connect(function(err, db){
 		if(err){
 			console.log(err);
 			throw err;
 		}
-		//запись нового заказа в коллекцию ordre
+		//запись нового заказа в коллекцию ordrer
 		order.insertOne(newData, function(err, res){
 										if (err){
 											console.log(err);
@@ -253,4 +300,28 @@ function getAllOrders(call){
 		
 	});
 }
+
+function test1(){
+getUserId("user1", function(uid1){
+			console.log(uid1);
+			getUserId("user2", function(uid2){
+				console.log(uid2);
+				getBookId("На подъеме", "Стивен Кинг", function(bid){
+					console.log(bid);
+					addOrder(uid1, bid, function(){
+						console.log("add");
+						addOrder(uid2, bid, function(){
+							console.log("add");
+							getAllOrders(function(arr){
+									arr.map(function(item){
+										console.log(item);
+									});
+							});
+						});
+					});
+				});
+			});
+});
+}
+
 
