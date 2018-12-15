@@ -11,7 +11,7 @@ $(document).ready(function() {
                 console.log("send");
             },
             error: function(result){
-                console.log(result);
+                $("#error-label").val("Произошла ошибка");
             }
         });
     });
