@@ -18,6 +18,8 @@
    + date - дата заказа.
 */
 
+//все функции посленим параметром имеют callback'и, т.к. все они асинхронны
+
 const MongoClient = require("mongodb").MongoClient; //модуль для работы с MongoDB
 var dbURL = "mongodb://localhost:27017";
 var dataBase = null; //будет хранить объект базы данных
@@ -34,7 +36,8 @@ mongoClient.connect(function(err, db){
 	}
 	dataBase = db.db("library"); //получение базы данных library
 	user = dataBase.collection("user"); //получение коллекции user
-	
+	book = dataBase.collection("book"); // получение коллекции book
+	order = dataBase.collection("order"); // получение коллекции order
 	//TODO: первоначальная инициализация данных базы
 });
 
@@ -44,8 +47,9 @@ mongoClient.connect(function(err, db){
 
 //функция добавления нового пользователя (вызывается при регестрациии)
 //в функцию передаются: log - логин нового пользователя; pass - пароль нового пользователя; mail - адресс электронной почты нового пользователя
-//функция ничего не возвращает
-function addUser(log, pass, mail){
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call ничего не передается
+function addUser(log, pass, mail, call){
 	var newData = {login: log, password: pass, email: mail}; //формирование объекта с данными о новом пользователе
 	mongoClient.connect(function(err, db){
 		if(err){
@@ -58,6 +62,7 @@ function addUser(log, pass, mail){
 											console.log(err);
 											throw err;
 										}
+										call();
 								});
 	});
 }
@@ -67,10 +72,10 @@ function addUser(log, pass, mail){
 //данная функция вызывается до функции addUser
 // !!!!
 //в функцию передается: log - логин, который нужно проверить на уникальность
-//функция возвращет true если логин уникален, иначе - false
-function isUniqueLogin(log){
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается true если логин уникален, иначе - false
+function isUniqueLogin(log, call){
 	var query = {login: log};
-	var res;
 	mongoClient.connect(function(err, db){
 		if(err){
 			console.log(err);
@@ -82,21 +87,22 @@ function isUniqueLogin(log){
 				throw err;
 			}
 			//если еще нет пользователя с логином log, то result будет равен null
+			var res;	
 			if(result)
 				res = false;
 			else
 				res = true;
+			call(res);
 		});
 	});
-	return res;
 }
 
 //функция, проверяющая есть ли в коллекции user пользователь с переданным логином и паролем
 //в функцию передаются: log - логин предполагаемого пользователя; pass - пароль предпалогаемого пользователя
-//возвращает запись (в MongoDB называется документом) о пользователе если он есть, иначе - null
-function getUserByLoginAndPassword(log, pass){
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается запись (в MongoDB называется документом) о пользователе если он есть, иначе - null
+function getUserByLoginAndPassword(log, pass, call){
 	var query = {login: log, password: pass};
-	var u = {};
 	mongoClient.connect(function(err, db){
 		if(err){
 			console.log(err);
@@ -108,19 +114,18 @@ function getUserByLoginAndPassword(log, pass){
 									throw err;
 								}
 								//если пользователя с таким логином и паролем не будет, то u бует null
-								u = res;
+								call(res);
 							});
 	});
-	return u;
 }
 
 //функция для получения id пользователя по его логину
 //id будет нужен при создании документа о заказе
 //в функцию передаются: log - логин пользователя, для которого нужно найти id
-//возвращает id (строка)
-function getUserId(log){
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается полученный id (в виде строки)
+function getUserId(log, call){
 	var query = {login: log};
-	var id;
 	mongoClient.connect(function(err, db){
 		if(err){
 			console.log(err);
@@ -131,14 +136,25 @@ function getUserId(log){
 									console.log(err);
 									throw err;
 								}
-								id = res._id;
+								call(res._id);
 						  });
 	});
-	return id;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
-///////////////////////Работа с книгами//////////////////////////////////////
+/////////////////////////Работа с книгами///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
-
+//функция для получения всех книг, хранящихся в БД
+//в функцию передаются:
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается массив (Array) с книгами
+function getAllBooks(call){
+	mongoClient.connect(function(err, db){
+		if(err){
+			console.log(err);
+			throw err;
+		}
+		user.find({});
+	});
+}
