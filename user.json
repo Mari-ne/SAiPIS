@@ -1,0 +1,54 @@
+{
+	"user": [
+		{
+			"login": "user1",
+			"password": "pass1",
+			"email": "user1@mail.ru"
+		},
+		{
+			"login": "user2",
+			"password": "pass2",
+			"email": "user2@gmail.com"
+		},
+		{
+			"login": "user3",
+			"password": "pass3",
+			"email": "user3@gmail.com"
+		},
+		{
+			"login": "user4",
+			"password": "pass4",
+			"email": "user4@gmail.com"
+		},
+		{
+			"login": "user5",
+			"password": "pass5",
+			"email": "user5@gmail.com"
+		},
+		{
+			"login": "user6",
+			"password": "pass6",
+			"email": "user6@gmail.com"
+		},
+		{
+			"login": "user7",
+			"password": "pass7",
+			"email": "user7@gmail.com"
+		},
+		{
+			"login": "user8",
+			"password": "pass8",
+			"email": "user8@gmail.com"
+		},
+		{
+			"login": "user9",
+			"password": "pass9",
+			"email": "user9@gmail.com"
+		},
+		{
+			"login": "user10",
+			"password": "pass10',
+			"email": "user10@gmail.com"
+		}
+	]
+}
