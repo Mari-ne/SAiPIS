@@ -1,0 +1,306 @@
+/* MAIN STYLES */
+
+.header { /*загаловок на страницах*/
+    z-index: 1;
+    transition: transform 0.5s;
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    height: 100px;
+    background: #b3e0be linear-gradient(
+            rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .2) 50%
+    ) center center / 100% 1em;
+    box-shadow: 0 1px 2px 0 black;
+}
+@media (max-width: 768px) {/*медиазапросы - применяют стили только при определенных условиях*/
+    .header .login { /*Для блока заголовка. Второй не используется*/
+        display: none; /*Элемент не отображается*/
+    }
+}
+@media (min-width: 768px) {/*медиазапросы - применяют стили только при определенных условиях*/
+    .header .login-small {/*Для блока заголовка. Второй не используется*/
+        display: none;/*Элемент не отображается*/
+    }
+}
+
+.logo { /*Блок логотипа*/
+    padding: 5px;
+    border-radius: 2px;
+    box-shadow: 0 0 5px 0 #342929;
+    background: #b3afa7;
+    align-self: center;
+    transition: box-shadow 0.2s;
+}
+.logo-img { /*картинка изображения*/
+    height: 80px;
+}
+
+.login form, .header .row { /*?*/
+    height: 100%;
+}
+.login input { /*поле ввода логина (не используется)*/
+    padding: 5px;
+    height: 40px;
+    border-radius: 2px;
+    border: 1px solid #342929;
+    outline: none;
+}
+
+.header button { /*кнопка в хэдэре(не используется)*/
+    padding: 5px;
+    height: 40px;
+    border-radius: 2px;
+    background-color: #b2aea6;
+    box-shadow: 0 0 5px 0 #342929;
+    transition: box-shadow 0.2s;
+}
+.header button:hover { /*при наведении курсора на кнопку в заголовке (не используется)*/
+    box-shadow: 0 0 10px 0 #342929;
+}
+
+.flex-column { /*флекс-верстка не используется*/
+    height: 100%;
+    display: flex;
+    flex-direction: column;/*выстроить колонкой*/
+    justify-content: space-around;/*отступы между блоками*/
+}
+.top { /*не используется*/
+    transform: translateY(-100px); /*сдвиг вниз*/
+}
+
+#main body { /*body в main*/
+    background-color: #b2dfbd;
+}
+#main .container {/*container class в main (используется в main.html)*/
+    z-index: 0;
+    padding-top: 120px; /*отступ от верхнего края*/
+    border: 1px solid #665c5c;
+    border-top: none;
+    border-bottom-right-radius: 5px; /*скругления*/
+    border-bottom-left-radius: 5px;
+    min-height: 100vh; /*от высоты окна браузера*/
+    transition: transform 0.5s; /*?*/
+    background-color: #b2aea6;
+}
+#main .container.top {
+    margin-bottom: -100px; /*отступ от низа*/
+}
+
+#main #post-container { /*на главной странице */
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+#main #post-container > * { /*Для любого непосредственного потомка post-containe в main*/
+    flex-basis: 200px;
+    flex-grow: 1;
+    flex-shrink: 2;
+}
+
+#main .post {/*не используется*/
+    background-color: #ffffff;
+    border: 1px solid #665c5c;
+    border-radius: 2px;
+    margin: 5px;
+    padding: 10px 10px 40px;
+    position: relative;
+}
+#main .post a {/*не используется*/
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    background-color: #b1debc;
+    border: 2px solid #8eb297;
+}
+#main .post h1 {/*не используется*/
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 1.7em;
+}
+#main .post .post-header {/*не используется*/
+    position: relative;
+}
+#main .post h1::after {/*не используется*/
+    content: '';
+    position: absolute;
+    height: 2px;
+    background-color: #b1ada5;
+    left: 5px;
+    right: 5px;
+    bottom: 2px;
+}
+#main .post img {/*не используется*/
+    margin-top: 5px;
+    width: 100%;
+}
+@media (min-width: 768px) { /*для экранов с минимальной шириной 768*/
+    #main .post {
+        max-width: 50%;
+    }
+}
+
+#main #pagination { /*используется в main*/
+    display: table; /*табличная верстка*/
+    margin: 10px auto;
+    text-align: center;
+}
+#main #pagination .page {/*не исользуется*/
+    margin: 0 2px;
+    display: inline-block;
+    padding: 5px;
+    border: 2px solid #665c5c;
+    min-width: 30px;
+    border-radius: 2px;
+    background-color: #b1debc;
+    outline: none;
+}
+#main #pagination .page.current {/*не исользуется*/
+    background-color: #8eb297;
+}
+
+/* COVER STYLES */
+/*стили на странице входа*/
+#cover, #cover body { 
+    height: 100%;
+    background: #b3e0be linear-gradient(
+            rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, .2) 50%
+    ) center center / 100% 1em;
+}
+#cover .site-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.5);
+}
+#cover .site-wrapper-inner {
+    display: table-cell;
+    vertical-align: top;
+}
+#cover .cover-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+@media (min-width: 768px) {
+    #cover .site-wrapper-inner {
+        vertical-align: middle;
+    }
+    #cover .cover-container {
+        width: 100%;
+    }
+}
+@media (min-width: 992px) {
+    #cover .cover-container {
+        width: 700px;
+    }
+    #cover #panel {
+        border-radius: 5px;
+    }
+    #cover #signup-btn {
+        border-top-right-radius: 5px;
+    }
+    #cover .logo-img {
+        border-top-left-radius: 5px;
+    }
+}
+
+/* LOGIN STYLES */
+
+#cover #panel {
+    background-color: #b3afa7;
+    box-shadow: 0 0 10px 2px #342929;
+}
+#cover .panel-header {
+    display: flex;
+    border-bottom: 2px solid #665c5c;
+}
+#cover .logo-img {
+    height: 60px;
+    background-color: #8eb297;
+    padding: 5px;
+}
+#cover .panel-header button {
+    flex-basis: 50%;
+    border: none;
+    background-color: #8eb297;
+    outline: none;
+    color: #665c5c;
+    position: relative;
+}
+#cover .panel-header button::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    background-color: #665c5c;
+    width: 2px;
+}
+#cover .panel-header button.selected {
+    background-color: #b2dfbd;
+    font-weight: bold;
+}
+
+#cover .panel-main > * {
+    display: none;
+}
+#cover .enabled {
+    display: block;
+}
+
+#cover .col-sm-6 {
+    padding: 10px;
+}
+#cover .col-sm-12 {
+    padding: 10px;
+}
+#cover input {
+    width: 100%;
+    border: 1px solid #665c5c;
+    outline: none;
+    padding: 5px;
+    border-radius: 2px;
+}
+#cover button {
+    width: 100%;
+    border: 1px solid #665c5c;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.hidden {
+    display: none;
+}
+#cover .error {
+    position: fixed;
+    background-color: #ffac17;
+    padding: 10px;
+    border: 2px solid #dc7500;
+    border-radius: 5px;
+}
+#cover #error-close {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #dc420c;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+@media (min-width: 768px) {
+    #cover .error {
+        top: 20px;
+        left: 25%;
+        right: 25%;
+    }
+}
+@media (max-width: 768px) {
+    #cover .error {
+        bottom: 20px;
+        left: 10px;
+        right: 10px;
+    }
+}
