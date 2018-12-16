@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru" id="cover">
+<head>
+    <meta charset="UTF-8">
+    <title>Электронная библиотека</title>
+    <link rel="stylesheet" href="../css/reset.css"> <!--библиотека стилей css. просто стандартные шрифты, отступы...-->
+	<link rel="stylesheet" href="../css/bootstrap.min.css"><!--бутстрап. используются его классы css-->
+    <link rel="stylesheet" href="../css/style.css"> <!--Наши стили-->
+</head>
+<body>
+    <div class="error hidden" id="error">
+        <div id="error-label">{1}</div>
+        <div id="error-close"></div>
+    </div>
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner"> <!--style.css -->
+            <div class="cover-container"> <!--style.css -->
+                <div class="cover" id="panel"> <!--cover in style.css| panel in LOGIN STYLES in style.css-->
+                    <div class="panel-header"> <!--LOGIN STYLES in style.css -->
+                        <button id="login-btn">Вход</button> <!--style for button in cover div in style.css -->
+                        <button id="signup-btn" class="selected">Регистрация</button> <!--style for button in cover div in style.css -->
+                    </div>
+                    <div class="panel-main"><!--style for panel-main class in cover div in style.css -->
+                        <div id="login-tab">
+                            <form  method="get" name="entry_form" id="entry_form" enctype="text/plain">
+                                <div class="container-fluid"> <!--bootstrap class-->
+                                    <div class="row"> <!--bootstrap class-->
+                                        <div class="col-sm-6"><!--style for col-sm-6 class in cover div in style.css -->
+                                            <label for="login-username">Имя пользователя</label>
+                                            <input type="text" placeholder="Имя пользователя" name="username" id="login-username" required>
+                                        </div>
+                                        <div class="col-sm-6"><!--style for col-sm-6 class in cover div in style.css -->
+                                            <label for="login-password">Пароль</label>
+                                            <input type="password" placeholder="Пароль" name="password" id="login-password" required>
+                                        </div>
+                                    </div>
+                                    <div class="row"> <!--bootstrap class-->
+                                        <div class="col-sm-12"><!--style for col-sm-12 class in cover div in style.css -->
+                                            <button id = "entry" type="button">Войти</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="signup-tab" class="enabled">
+                            <form method="get" name="registration_form" id="registration_form" enctype="text/plain">
+                                <div class="container-fluid"> <!--bootstrap class-->
+                                    <div class="row"> <!--bootstrap class-->
+                                        <div class="col-sm-6"><!--style for col-sm-6 class in cover div in style.css -->
+                                            <label for="signup-username">Имя пользователя</label>
+                                            <input type="text" placeholder="Имя пользователя" name="username" id="signup-username" required>
+                                        </div>
+                                        <div class="col-sm-6"><!--style for col-sm-6 class in cover div in style.css -->
+                                            <label for="signup-email">Электронная почта</label>
+                                            <input type="email" placeholder="Электронная почта" name="email" id="signup-email" required>
+                                        </div>
+                                    </div>
+                                    <div class="row"> <!--bootstrap class-->
+                                        <div class="col-sm-6"><!--style for col-sm-6 class in cover div in style.css -->
+                                            <label for="signup-password">Введите пароль</label>
+                                            <input type="password" placeholder="Пароль" name="password" id="signup-password" required>
+                                        </div>
+                                        <div class="col-sm-6"><!--style for col-sm-6 class in cover div in style.css -->
+                                            <label for="signup-repeat">Повторите пароль</label>
+                                            <input type="password" placeholder="Повторите пароль" name="repeat" id="signup-repeat" required>
+                                        </div>
+                                    </div>
+                                    <div class="row"><!--bootstrap class-->
+                                        <div class="col-sm-12"><!--style for col-sm-12 class in cover div in style.css -->
+                                            <button id = "registration" type="button">Зарегистрироваться</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/login.js"></script> // визуальное оформление страницы. нажатием на вкладки. управление всплывающим окном подсказки
+    <script src="../js/singup.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/entry.js"></script>
+    <script src="../js/registration.js"></script>
+</body>
+</html>

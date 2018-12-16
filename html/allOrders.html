@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru" id="main">
+<head>
+    <meta charset="UTF-8">
+    <title>Форум</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row header" id="header-big">
+        <div class="logo">
+                <img src="../img/logo.svg" alt="Логотип" class="logo-img">
+        </div>
+        <div class="login">
+            <form action="login" method="post">
+                <input type="hidden" value="/" name="target">
+</form>
+        </div>
+        <div class="login-small">
+            <div class="row">
+                <div class="flex-column">
+                    <button id="login-small-btn" class="btn">Войти</button>
+                    <button id="signup-small-btn" class="btn">Зарегистрироваться</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="container">
+    <div id="post-container"></div>
+    <div id="pagination"></div>
+</div>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/header.js"></script>
+<script src="../js/main.js"></script>
+</body>
+</html>
