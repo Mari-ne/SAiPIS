@@ -72,7 +72,7 @@ mongoClient.connect(function(err, db){
 
 //заполнение БД данными из json файлов
 //в функцию передается: collect - название коллекции, которую необходимо заполнить изначальными данными
-export function initFill(collect){
+function initFill(collect){
 	//считывается файл resources\\<название_коллекции>.json
 	fs.readFile("resources\\" + collect + ".json", function(err, data){
 		//полученные из файла данные переводятся в строку (toString), затем эта строка превращается json форму (JSON.parse)
@@ -102,11 +102,12 @@ export function initFill(collect){
 //в функц	ию передаются: log - логин нового пользователя; pass - пароль нового пользователя; mail - адресс электронной почты нового пользователя
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call ничего не передается
-export function addUser(log, pass, mail, call){
+function addUser(log, pass, mail, call){
 	var newData = {login: log, password: pass, email: mail}; //формирование объекта с данными о новом пользователе
+	//подключение к БД
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
-		//запись нового пользователя в коллекцию user
+		//вставка нового пользователя в коллекцию user
 		user.insertOne(newData, function(err, res){
 									errorHandler(err);
 									call();
@@ -116,24 +117,24 @@ export function addUser(log, pass, mail, call){
 
 //функция, проверяющая уникальность нового логина
 // !!!!
-//данная функция вызывается до функции addUser
+//ДАННАЯ ФУНКЦИЯ ВЫЗЫВАЕТСЯ ДО ФУНКЦИИ addUser
 // !!!!
 //в функцию передается: log - логин, который нужно проверить на уникальность
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается true если логин уникален, иначе - false
-export function isUniqueLogin(log, call){
-	var query = {login: log};
+function isUniqueLogin(log, call){
+	var query = {login: log}; //создания объекта-условия поиска
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
 		user.findOne(query, function(err, result){
-		errorHandler(err);
-			//если еще нет пользователя с логином log, то result будет равен null
-			var res;	
-			if(result)
-				res = false;
-			else
-				res = true;
-			call(res);
+			errorHandler(err);
+				//если еще нет пользователя с логином log, то result будет равен null
+				var res;
+				if(result)
+					res = false;
+				else
+					res = true;
+				call(res);
 		});
 	});
 }
@@ -142,10 +143,11 @@ export function isUniqueLogin(log, call){
 //в функцию передаются: log - логин предполагаемого пользователя; pass - пароль предпалогаемого пользователя
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается запись (в MongoDB называется документом) о пользователе если он есть, иначе - null
-export function getUserByLoginAndPassword(log, pass, call){
-	var query = {login: log, password: pass};
+function getUserByLoginAndPassword(log, pass, call){
+	var query = {login: log, password: pass};//создание объекта-условия поиска
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
+		//поиск первого вхождения документа о пользователе с логином log и паролем pass
 		user.findOne(query, function(err, res) {
 								errorHandler(err)
 								//если пользователя с таким логином и паролем не будет, то u бует null
@@ -159,10 +161,11 @@ export function getUserByLoginAndPassword(log, pass, call){
 //в функцию передаются: log - логин пользователя, для которого нужно найти id
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функциюs call передается полученный id (в виде строки)
-export function getUserId(log, call){
-	var query = {login: log};
+function getUserId(log, call){
+	var query = {login: log};//создание объекта-условия поиска
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
+		//поиск первого вхождения документа о пользователе с логином log
 		user.findOne(query, function(err, result){
 							errorHandler(err);
 							call(result._id);
@@ -181,6 +184,7 @@ export function getUserId(log, call){
 export function getAllBooks(call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
+		//поиск всех книг (без условий поиска)
 		book.find({}).toArray(function(err, result){
 					errorHandler(err);
 					call(result)
@@ -194,10 +198,11 @@ export function getAllBooks(call){
 //в функцию передаются: bookName - назвние книги, для которой происходит поиск; bookAuthor - автор книги, для которой происходит поиск
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается полученный id (в виде строки)
-export function getBookId(bookName, bookAuthor, call){
-	var query = {name: bookName, author: bookAuthor};
+function getBookId(bookName, bookAuthor, call){
+	var query = {name: bookName, author: bookAuthor}; //создание объекта-условия поиска
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
+		//поиск первого вхождения документа о книге с названием bookName и автором bookAuthor
 		book.findOne(query, function(err, res) {
 								errorHandler(err);
 								call(res._id);
@@ -209,11 +214,11 @@ export function getBookId(bookName, bookAuthor, call){
 //в функцию передаются: bookName - название новой книги; bookAuthor - автор новой книги; bookAnnotation - аннотация новой книги; bookDescription - описание новой книги
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call ничего не передается
-export function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
+function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
 	var newData = {name: bookName, author: bookAuthor, annotation: bookAnnotation, description: bookDescription}; //формирование объекта с данными о новой книге
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
-		//запись нового пользователя в коллекцию user
+		//вставка нового пользователя в коллекцию user
 		book.insertOne(newData, function(err, res){
 										errorHandler(err);
 										call();
@@ -233,7 +238,7 @@ function addOrder(userId, bookId, call){
 	var newData = {id_user: userId, id_book: bookId, date: new Date()}; //формирование объекта с данными о новом заказе
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
-		//запись нового заказа в коллекцию ordrer
+		//вставка нового заказа в коллекцию ordrer
 		order.insertOne(newData, function(err, res){
 										errorHandler(err);
 										call();
@@ -253,7 +258,7 @@ function addOrder(userId, bookId, call){
 //					name: <название заказанной книги>,
 //					author: <автор заказанной книги>
 //		date: <дата заказа>
-export function getUserOrder(userId, call){
+function getUserOrder(userId, call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
 		order.aggregate([{
@@ -270,7 +275,7 @@ export function getUserOrder(userId, call){
 		}, {
 			$lookup:{
 					from: "book",  //с какой таблицей объединять
-					localField: "id_book", //название поля в целевой ьаблице (order)
+					localField: "id_book", //название поля в целевой таблице (order)
 					foreignField: "_id", //название поля в таблице-источнике (user)
 					as: "bookInfo"
 				}
@@ -297,7 +302,7 @@ export function getUserOrder(userId, call){
 //					name: <название заказанной книги>,
 //					author: <автор заказанной книги>
 //		date: <дата заказа>
-export function getAllOrders(call){
+function getAllOrders(call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
 		order.aggregate([{
@@ -335,7 +340,7 @@ export function getAllOrders(call){
 //в функцию передается: error - ошибка, которую нужно обработать
 //функция ничего не возвращает
 //функция выкидывает исключение (это необходимо, чтобы верхние уровни знали о проблеме)
-export function errorHandler(error){
+function errorHandler(error){
 	if(error){
 		//если ошибка есть, то вывести ее на экран и выкинуть исключение
 		console.log(error);
@@ -347,7 +352,7 @@ export function errorHandler(error){
 //в функцию передается:
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) JS Object'ов, каждый из которых содержит свою контактную информацию
-export function getContactInfo(call){
+function getContactInfo(call){
 	//считывается файл resources\\contacts.json
 	fs.readFile("resources\\contacts.json", function(err, data){
 		//полученные из файла данные переводятся в строку (toString), затем эта строка превращается json форму (JSON.parse)
@@ -355,3 +360,20 @@ export function getContactInfo(call){
 	});	
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////Экспорт////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+module.exports{
+	addUser: addUser,
+	isUniqueLogin: isUniqueLogin,
+	getUserByLoginAndPassword: getUserByLoginAndPassword,
+	getUserId: getUserId,
+	getAllBooks: getAllBooks,
+	getBookId: getBookId,
+	addOrder: addOrder,
+	getUserOrder: getUserOrder,
+	getAllOrders: getAllOrders,
+	getContactInfo: getContactInfo
+}
