@@ -3,6 +3,9 @@ $.ajax({
     method: 'get',
     success: function(response){
         document.getElementById("insertBody").innerHTML += response;
+	$('[id^="but_"]').click(function () {
+        	alert("yes");
+	});
     },
     error: function(result){
         console.log(result);
@@ -10,9 +13,6 @@ $.ajax({
     }
 });
 
-$('[id^="but_"]').click(function () {
-        alert("yes");
-});
 
 $("#about").click(function(){
 	$.ajax({
