@@ -6,7 +6,6 @@ var databasescript = require("../Контрольная/js/dataBase");
 var http = require("http");
 var fs = require('fs');
 var url = require('url');
-var $ = require("jquery");
 
 var mapping = {
     '/': loadIndex,
@@ -14,7 +13,9 @@ var mapping = {
     '/registration': registration,
     "/getBooks": getBooks,
     '/about': getAbout, 
-    '/contacts': getContacts
+    '/contacts': getContacts,
+	'/main': getMain,
+	'/catalog': getCatalog
 };
 
 http.createServer(function(req, res){
@@ -67,12 +68,10 @@ function entry(request, response){
     databasescript.getUserByLoginAndPassword(login, password, function (success) {
         if (success){
             //если был возвращен объект не null
-            fs.readFile('html\\catalog.html', function(err, data){
-                response.writeHead(200, {"Content-Type": "application/json"});
-                var dataToSend = {html: data.toString(), userLogin: success.login.toString()};
-                response.write(JSON.stringify(dataToSend));
-                return response.end();
-            })
+            response.writeHead(200, {"Content-Type": "application/json"});
+            var dataToSend = {userLogin: success.login.toString()};
+            response.write(JSON.stringify(dataToSend));
+            return response.end();
         }else{
             response.writeHead(200, {"Content-Type": "text/html"});
             response.write("error");
@@ -88,12 +87,13 @@ function registration(request, response){
 
     databasescript.isUniqueLogin(login, function(unique){
         if (unique){
-            databasescript.addUser(login, password, email, function () {});
-            fs.readFile('html\\catalog.html', function(err, data){
-                response.writeHead(200, {"Content-Type": "text/html"});
-                response.write(data);
-                return response.end();
-            });
+            databasescript.addUser(login, password, email, function () {
+				response.writeHead(200, {"Content-Type": "application/json"});
+				var dataToSend = {userLogin: login};
+				response.write(JSON.stringify(dataToSend));
+				return response.end();
+			});
+            
         }else{
             response.writeHead(200, {"Content-Type": "text/html"});
             response.write("error");
@@ -136,3 +136,18 @@ function getContacts(request, response){
     });
 }
 
+function getMain(request, response){
+    fs.readFile("html\\main.html", function(err, data){
+            response.writeHead(200, {"Content-Type": "text/html"});
+            response.write(data.toString());
+            return response.end();
+        });
+}
+
+function getCatalog(request, response){
+    fs.readFile("html\\catalog.html", function(err, data){
+            response.writeHead(200, {"Content-Type": "text/html"});
+            response.write(data.toString());
+            return response.end();
+        });
+}
