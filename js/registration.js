@@ -13,9 +13,13 @@ $(document).ready(function() {
                     $("#error").css("display", "initial");
                     $("#error").val("Вы использовали не уникальное имя и/или пароль.");
                 }else{
-                    console.log("регистрация прошла успешно");
-					sessionStorage.setItem("login", response.userLogin);
-					window.open("http://localhost:12321/main", "_self");
+                    	console.log("регистрация прошла успешно");
+			//сохранение логина пользователя, который только что авторизировался
+			//в sessionStorage (это хранилище хранит данные только пока открыта вкладка)
+			sessionStorage.setItem("login", response.userLogin);
+			//переход по ссылке http://localhost:12321/main
+			//новая страница откроется в той же вкладке (параметр '_self')
+			window.open("http://localhost:12321/main", "_self");
                 }
             },
             error: function(result){
