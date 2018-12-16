@@ -14,15 +14,11 @@ $(document).ready(function() {
                     $("#error").css("display", "initial");
                     $("#error").val("Ошибка входа.");
                 }else{
-					sessionStorage.setItem("login", response.userLogin);
-					window.open("http://localhost:12321/main", "_self");
-					/*
-                    
-                    console.log("aaaaaaaaaaaaaaaaaa");
-                    console.log(response.userLogin);
-                    document.write(response.html);
-                    console.log("aaaaaaaaaaaaaaaaaa");
-					*/
+			sessionStorage.setItem("login", response.userLogin); //сохранение логина авторизировавшегося 
+			//пользователял в sessionStorage (это хранилище хранит данные только пока открыта вкладка)
+			//переход по ссылке http://localhost:12321/main
+			//новая страница откроется в той же вкладке (параметр '_self')
+			window.open("http://localhost:12321/main", "_self");
                 }
             },
             error: function(result){
