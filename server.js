@@ -14,8 +14,8 @@ var mapping = {
     "/getBooks": getBooks,
     '/about': getAbout, 
     '/contacts': getContacts,
-	'/main': getMain,
-	'/catalog': getCatalog
+    '/main': getMain,
+    '/catalog': getCatalog
 };
 
 http.createServer(function(req, res){
@@ -70,6 +70,7 @@ function entry(request, response){
             //если был возвращен объект не null
             response.writeHead(200, {"Content-Type": "application/json"});
             var dataToSend = {userLogin: success.login.toString()};
+		//отправка клиенту логина авторизировшегося пользователя
             response.write(JSON.stringify(dataToSend));
             return response.end();
         }else{
@@ -90,6 +91,7 @@ function registration(request, response){
             databasescript.addUser(login, password, email, function () {
 				response.writeHead(200, {"Content-Type": "application/json"});
 				var dataToSend = {userLogin: login};
+		   		//отправка клиенту логина зарегестрировавшегося пользователя
 				response.write(JSON.stringify(dataToSend));
 				return response.end();
 			});
@@ -131,6 +133,7 @@ function getAbout(request, response){
 function getContacts(request, response){
     databasescript.getContactInfo(function(contact){
         response.writeHead(200, {"Content-Type": "application/json"});
+	    //отправка клиенту контактной информации
         response.write(JSON.stringify(contact));
         return response.end();
     });
