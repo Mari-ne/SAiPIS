@@ -58,3 +58,9 @@ function entry(request, response){
     var password = url.parse(request.url, true).query.password;
 }
 
+function registration(request, response){
+    var login = url.parse(request.url, true).query.username;
+    var password = url.parse(request.url, true).query.password;
+    var email = url.parse(request.url, true).query.email;
+}
+
