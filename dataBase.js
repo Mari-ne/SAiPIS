@@ -25,7 +25,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 var fs = require("fs"); //модуль для работы с файловой системой
 const MongoClient = require("mongodb").MongoClient; //модуль для работы с MongoDB
-var dbURL = "mongodb://localhost:27017";
+const dbURL = "mongodb://localhost:27017";
 var dataBase = null; //будет хранить объект базы данных
 var user = null; //будет хранить коллекцию user
 var book = null; // будет хранить коллекцию book
@@ -34,16 +34,17 @@ const mongoClient = new MongoClient(dbURL, { useNewUrlParser: true }); //соз�
 
 //первоначальная инициализация объектов БД
 mongoClient.connect(function(err, db){
-	if(err){
-		console.log(err);
-		throw err;
-	}
+	errorHandler(err);
 	dataBase = db.db("library"); //получение базы данных library
-	user = dataBase.createCollection("user"); //получение коллекции user
-	initFill("user");
-	book = dataBase.createCollection("book"); // получение коллекции book
-	initFill("book");
-	order = dataBase.createCollection("order"); // получение коллекции order
+	
+	//dataBase.createCollection("user"); //создание коллекции user
+	user = dataBase.collection("user"); //получение коллекции
+	//initFill("user");
+	//dataBase.createCollection("book"); //создание коллекции book
+	book = dataBase.collection("book"); //получение коллекции
+	//initFill("book");
+	//dataBase.createCollection("order"); //создание коллекции order
+	order = dataBase.collection("order"); //получение коллекции
 	test1();
 });
 
@@ -59,11 +60,11 @@ function initFill(collect){
 		JSON.parse(data.toString())[collect].map(function(item){
 			switch(collect){
 				case "user": {
-					addUser(item.login, item.password, item.email, function(){console.log("add");});
+					addUser(item.login, item.password, item.email, function(){console.log("Uadd");});
 					break;
 				}
 				case "book":{
-					addBook(item.name, item.author, item.annotation, item.description, function(){console.log("add");});
+					addBook(item.name, item.author, item.annotation, item.description, function(){console.log("Badd");});
 					break;
 				}
 			}
@@ -76,23 +77,17 @@ function initFill(collect){
 ///////////////////////////////////////////////////////////////////////////////////
 
 //функция добавления нового пользователя (вызывается при регестрациии)
-//в функцию передаются: log - логин нового пользователя; pass - пароль нового пользователя; mail - адресс электронной почты нового пользователя
+//в функц	ию передаются: log - логин нового пользователя; pass - пароль нового пользователя; mail - адресс электронной почты нового пользователя
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call ничего не передается
 function addUser(log, pass, mail, call){
 	var newData = {login: log, password: pass, email: mail}; //формирование объекта с данными о новом пользователе
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		//запись нового пользователя в коллекцию user
 		user.insertOne(newData, function(err, res){
-										if (err){
-											console.log(err);
-											throw err;
-										}
-										call();
+									errorHandler(err);
+									call();
 								});
 	});
 }
@@ -107,15 +102,9 @@ function addUser(log, pass, mail, call){
 function isUniqueLogin(log, call){
 	var query = {login: log};
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		user.findOne(query, function(err, result){
-			if (err){
-				console.log(err);
-				throw err;
-			}
+		errorHandler(err);
 			//если еще нет пользователя с логином log, то result будет равен null
 			var res;	
 			if(result)
@@ -134,15 +123,9 @@ function isUniqueLogin(log, call){
 function getUserByLoginAndPassword(log, pass, call){
 	var query = {login: log, password: pass};
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		user.findOne(query, function(err, res) {
-								if (err) {
-									console.log(err);
-									throw err;
-								}
+								errorHandler(err)
 								//если пользователя с таким логином и паролем не будет, то u бует null
 								call(res);
 							});
@@ -153,21 +136,15 @@ function getUserByLoginAndPassword(log, pass, call){
 //id будет нужен при создании документа о заказе
 //в функцию передаются: log - логин пользователя, для которого нужно найти id
 //call - функция, которая выполниться после выполнения этой функции (callback)
-//    в функцию call передается полученный id (в виде строки)
+//    в функциюs call передается полученный id (в виде строки)
 function getUserId(log, call){
 	var query = {login: log};
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
-		user.findOne(query, function(err, res) {
-								if (err) {
-									console.log(err);
-									throw err;
-								}
-								call(res._id);
-						  });
+		errorHandler(err);
+		user.findOne(query, function(err, result){
+							errorHandler(err);
+							call(result._id);
+		});		
 	});
 }
 
@@ -181,10 +158,7 @@ function getUserId(log, call){
 //    в функцию call передается массив (Array) с книгами
 function getAllBooks(call){
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		call(book.find({}).toArray());
 	});
 }
@@ -198,15 +172,9 @@ function getAllBooks(call){
 function getBookId(bookName, bookAuthor, call){
 	var query = {name: bookName, author: bookAuthor};
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		book.findOne(query, function(err, res) {
-								if (err) {
-									console.log(err);
-									throw err;
-								}
+								errorHandler(err);
 								call(res._id);
 						  });
 	});
@@ -219,16 +187,10 @@ function getBookId(bookName, bookAuthor, call){
 function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
 	var newData = {name: bookName, author: bookAuthor, annotation: bookAnnotation, description: bookDescription}; //формирование объекта с данными о новой книге
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		//запись нового пользователя в коллекцию user
 		book.insertOne(newData, function(err, res){
-										if (err){
-											console.log(err);
-											throw err;
-										}
+										errorHandler(err);
 										call();
 								});
 	});
@@ -245,16 +207,10 @@ function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
 function addOrder(userId, bookId, call){
 	var newData = {id_user: userId, id_book: bookId, date: new Date()}; //формирование объекта с данными о новом заказе
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
+		errorHandler(err);
 		//запись нового заказа в коллекцию ordrer
 		order.insertOne(newData, function(err, res){
-										if (err){
-											console.log(err);
-											throw err;
-										}
+										errorHandler(err);
 										call();
 								});
 	});
@@ -265,13 +221,34 @@ function addOrder(userId, bookId, call){
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) с заказами
 function getUserOrder(userId, call){
-	var query = {id_user: userId};
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
-		call(order.find(query).toArray());
+		errorHandler(err);
+		order.aggregate([{
+			$match: {"id_user": userId} //ищет совпадения по условию id_user = userId
+		},{
+			$lookup:{
+					from: "user",  //с какой таблицей объединять
+					localField: "id_user", //название поля в целевой таблице (order)
+					foreignField: "_id", //название поля в таблице-источнике (user)
+					as: "userInfo"
+				}
+		}, {
+			$unwind: "$userInfo"
+		}, {
+			$lookup:{
+					from: "book",  //с какой таблицей объединять
+					localField: "id_book", //название поля в целевой ьаблице (order)
+					foreignField: "_id", //название поля в таблице-источнике (user)
+					as: "bookInfo"
+				}
+		},{
+			$unwind: "$bookInfo"
+		},{
+			$project: { "_id": 1, "userInfo.login": 1, "bookInfo.name": 1, "bookInfo.author": 1, "date": 1}//определение полей, содержащихся в вернувшемся документе
+		}]).toArray(function(err, result){
+			errorHandler(err);
+			call(result);
+		});		
 	});
 }
 
@@ -281,47 +258,37 @@ function getUserOrder(userId, call){
 //    в функцию call передается массив (Array) с заказами
 function getAllOrders(call){
 	mongoClient.connect(function(err, db){
-		if(err){
-			console.log(err);
-			throw err;
-		}
-		call(order.aggregate([{
+		errorHandler(err);
+		order.aggregate([{
 			$lookup:{
 					from: "user",  //с какой таблицей объединять
-					localField: "id_user", //название поля в целевой ьаблице (order)
+					localField: "id_user", //название поля в целевой таблице (order)
 					foreignField: "_id", //название поля в таблице-источнике (user)
-					as: "UO"
+					as: "userInfo"
 				}
 		}, {
-			$replaceRoot: {newRoot: {$mergeObjects: [{$arrayElemAt: [ "$UO", 0 ] }, "$$ROOT" ] } }
+			$unwind: "$userInfo"
 		}, {
-			$project: { UO: 0 }
-		}]));
-		
+			$lookup:{
+					from: "book",  //с какой таблицей объединять
+					localField: "id_book", //название поля в целевой ьаблице (order)
+					foreignField: "_id", //название поля в таблице-источнике (user)
+					as: "bookInfo"
+				}
+		},{
+			$unwind: "$bookInfo"
+		},{
+			$project: { "_id": 1, "userInfo.login": 1, "bookInfo.name": 1, "bookInfo.author": 1, "date": 1}//определение полей, содержащихся в вернувшемся документе
+		}]).toArray(function(err, result){
+			errorHandler(err);
+			call(result);
+		});		
 	});
 }
 
-function test1(){
-getUserId("user1", function(uid1){
-			console.log(uid1);
-			getUserId("user2", function(uid2){
-				console.log(uid2);
-				getBookId("На подъеме", "Стивен Кинг", function(bid){
-					console.log(bid);
-					addOrder(uid1, bid, function(){
-						console.log("add");
-						addOrder(uid2, bid, function(){
-							console.log("add");
-							getAllOrders(function(arr){
-									arr.map(function(item){
-										console.log(item);
-									});
-							});
-						});
-					});
-				});
-			});
-});
+function errorHandler(error){
+	if(error){
+		console.log(error);
+		throw error;
+	}
 }
-
-
