@@ -3,9 +3,9 @@ $.ajax({
     method: 'get',
     success: function(response){
         document.getElementById("insertBody").innerHTML += response;
-	$('[id^="but_"]').click(function () {
-        	alert("yes");
-	});
+		$("button[id^='but_']").click(function () {
+					alert("yes");
+			});
     },
     error: function(result){
         console.log(result);
@@ -14,6 +14,7 @@ $.ajax({
 });
 
 
+
 $("#about").click(function(){
-	window.open('http://localhost:12321/about', '_blank');
+	window.open('http://localhost:12321/about', '_self');
 })

@@ -14,7 +14,8 @@ $(document).ready(function() {
                     $("#error").val("Вы использовали не уникальное имя и/или пароль.");
                 }else{
                     console.log("регистрация прошла успешно");
-                    document.write(response);
+					sessionStorage.setItem("login", response.userLogin);
+					window.open("http://localhost:12321/main", "_self");
                 }
             },
             error: function(result){

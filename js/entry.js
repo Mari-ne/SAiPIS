@@ -14,11 +14,15 @@ $(document).ready(function() {
                     $("#error").css("display", "initial");
                     $("#error").val("Ошибка входа.");
                 }else{
-                    sessionStorage.setItem("login", response.userLogin);
+					sessionStorage.setItem("login", response.userLogin);
+					window.open("http://localhost:12321/main", "_self");
+					/*
+                    
                     console.log("aaaaaaaaaaaaaaaaaa");
                     console.log(response.userLogin);
                     document.write(response.html);
                     console.log("aaaaaaaaaaaaaaaaaa");
+					*/
                 }
             },
             error: function(result){
