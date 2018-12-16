@@ -24,8 +24,11 @@
 ////////////////////////////Работа с БД/////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 var fs = require("fs"); //модуль для работы с файловой системой
+//полная документация по fs - https://nodejs.org/api/fs.html
 const MongoClient = require("mongodb").MongoClient; //модуль для работы с MongoDB
-const dbURL = "mongodb://localhost:27017";
+//полная документация по mongodb - https://docs.mongodb.com/manual/
+
+const dbURL = "mongodb://localhost:27017"; //url БД
 var dataBase = null; //будет хранить объект базы данных
 var user = null; //будет хранить коллекцию user
 var book = null; // будет хранить коллекцию book
@@ -39,6 +42,7 @@ mongoClient.connect(function(err, db){
 	
 	//dataBase.createCollection("user"); //создание коллекции user
 	user = dataBase.collection("user"); //получение коллекции
+	//user.
 	//initFill("user");
 	//dataBase.createCollection("book"); //создание коллекции book
 	book = dataBase.collection("book"); //получение коллекции
@@ -50,11 +54,11 @@ mongoClient.connect(function(err, db){
 
 //заполнение БД данными из json файлов
 //в функцию передается: collect - название коллекции, которую необходимо заполнить изначальными данными
-function initFill(collect){
-	//считывается файл resources\\user.json
+export function initFill(collect){
+	//считывается файл resources\\<название_коллекции>.json
 	fs.readFile("resources\\" + collect + ".json", function(err, data){
 		//полученные из файла данные переводятся в строку (toString), затем эта строка превращается json форму (JSON.parse)
-		//json файл имее структуру <название_таблицы>:[{}, {}, ...], поэтому получаем значение хранящееся в свойстве <название_таблицы>
+		//json файл имее структуру <название_коллекции>:[{}, {}, ...], поэтому получаем значение хранящееся в свойстве <название_коллекции>
 		//т.к. это значение - массив (Array), то для него применима функция map, которая позволяет перебрать весь массив поэлементно
 		//каждый из элементов массива будет записан в базу
 		JSON.parse(data.toString())[collect].map(function(item){
@@ -80,7 +84,7 @@ function initFill(collect){
 //в функц	ию передаются: log - логин нового пользователя; pass - пароль нового пользователя; mail - адресс электронной почты нового пользователя
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call ничего не передается
-function addUser(log, pass, mail, call){
+export function addUser(log, pass, mail, call){
 	var newData = {login: log, password: pass, email: mail}; //формирование объекта с данными о новом пользователе
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -99,7 +103,7 @@ function addUser(log, pass, mail, call){
 //в функцию передается: log - логин, который нужно проверить на уникальность
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается true если логин уникален, иначе - false
-function isUniqueLogin(log, call){
+export function isUniqueLogin(log, call){
 	var query = {login: log};
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -120,7 +124,7 @@ function isUniqueLogin(log, call){
 //в функцию передаются: log - логин предполагаемого пользователя; pass - пароль предпалогаемого пользователя
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается запись (в MongoDB называется документом) о пользователе если он есть, иначе - null
-function getUserByLoginAndPassword(log, pass, call){
+export function getUserByLoginAndPassword(log, pass, call){
 	var query = {login: log, password: pass};
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -137,7 +141,7 @@ function getUserByLoginAndPassword(log, pass, call){
 //в функцию передаются: log - логин пользователя, для которого нужно найти id
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функциюs call передается полученный id (в виде строки)
-function getUserId(log, call){
+export function getUserId(log, call){
 	var query = {login: log};
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -156,10 +160,13 @@ function getUserId(log, call){
 //в функцию передаются:
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) с книгами
-function getAllBooks(call){
+export function getAllBooks(call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
-		call(book.find({}).toArray());
+		book.find({}).toArray(function(err, result){
+					errorHandler(err);
+					call(result)
+		});
 	});
 }
 
@@ -169,7 +176,7 @@ function getAllBooks(call){
 //в функцию передаются: bookName - назвние книги, для которой происходит поиск; bookAuthor - автор книги, для которой происходит поиск
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается полученный id (в виде строки)
-function getBookId(bookName, bookAuthor, call){
+export function getBookId(bookName, bookAuthor, call){
 	var query = {name: bookName, author: bookAuthor};
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -184,7 +191,7 @@ function getBookId(bookName, bookAuthor, call){
 //в функцию передаются: bookName - название новой книги; bookAuthor - автор новой книги; bookAnnotation - аннотация новой книги; bookDescription - описание новой книги
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call ничего не передается
-function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
+export function addBook(bookName, bookAuthor, bookAnnotation, bookDescription, call){
 	var newData = {name: bookName, author: bookAuthor, annotation: bookAnnotation, description: bookDescription}; //формирование объекта с данными о новой книге
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -220,7 +227,7 @@ function addOrder(userId, bookId, call){
 //в функцию передаются: userId - id пользователя, все заказы которого нужно получить
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) с заказами
-function getUserOrder(userId, call){
+export function getUserOrder(userId, call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
 		order.aggregate([{
@@ -256,7 +263,7 @@ function getUserOrder(userId, call){
 //в функцию передаются:
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) с заказами
-function getAllOrders(call){
+export function getAllOrders(call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
 		order.aggregate([{
@@ -286,9 +293,31 @@ function getAllOrders(call){
 	});
 }
 
-function errorHandler(error){
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////Сторонние функции//////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+//функция обработки ошибок (была созданна для уменьшения дублируещегося кода)
+//в функцию передается: error - ошибка, которую нужно обработать
+//функция ничего не возвращает
+//функция выкидывает исключение (это необходимо, чтобы верхние уровни знали о проблеме)
+export function errorHandler(error){
 	if(error){
+		//если ошибка есть, то вывести ее на экран и выкинуть исключение
 		console.log(error);
 		throw error;
 	}
 }
+
+//функция для прочтения файла с контактной информацией (для страницы "О нас")
+//в функцию передается:
+//call - функция, которая выполниться после выполнения этой функции (callback)
+//    в функцию call передается массив (Array) JS Object'ов, каждый из которых содержит свою контактную информацию
+export function getContactInfo(call){
+	//считывается файл resources\\contacts.json
+	fs.readFile("resources\\contacts.json", function(err, data){
+		//полученные из файла данные переводятся в строку (toString), затем эта строка превращается json форму (JSON.parse)
+		call(JSON.parse(data.toString())[collect]);
+	});	
+}
+
