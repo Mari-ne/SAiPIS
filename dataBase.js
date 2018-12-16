@@ -245,6 +245,14 @@ function addOrder(userId, bookId, call){
 //в функцию передаются: userId - id пользователя, все заказы которого нужно получить
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) с заказами
+//Передаваемый массив содержит в себе JS Object со следующей структурой:
+//		_id: <id заказа>
+//		userInfo:
+//					login: <логин пользователя, сделавшего заказ>
+//		bookInfo:
+//					name: <название заказанной книги>,
+//					author: <автор заказанной книги>
+//		date: <дата заказа>
 export function getUserOrder(userId, call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
@@ -281,6 +289,14 @@ export function getUserOrder(userId, call){
 //в функцию передаются:
 //call - функция, которая выполниться после выполнения этой функции (callback)
 //    в функцию call передается массив (Array) с заказами
+//Передаваемый массив содержит в себе JS Object со следующей структурой:
+//		_id: <id заказа>
+//		userInfo:
+//					login: <логин пользователя, сделавшего заказ>
+//		bookInfo:
+//					name: <название заказанной книги>,
+//					author: <автор заказанной книги>
+//		date: <дата заказа>
 export function getAllOrders(call){
 	mongoClient.connect(function(err, db){
 		errorHandler(err);
