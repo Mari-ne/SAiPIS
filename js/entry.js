@@ -1,3 +1,10 @@
+try{
+	sessionStorage.clear();
+}
+catch(err){
+	;
+}
+
 $(document).ready(function() {
     //html  польностью загружен
 
