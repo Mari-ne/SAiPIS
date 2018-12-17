@@ -16,3 +16,17 @@ signupBtn.addEventListener('click', function() {// если нажали на в
     loginTab.classList.remove('enabled');//удаляет анологичное свойство с кнопки Вход
     signupTab.classList.add('enabled');//блоку с полями ввода логина и пароля добавляем свойство {оно позволяет нам занимать ровно столько места, сколько необходимо}
 });
+
+//при фокусе на input'e, находящемся в поле с id login-tab
+//цвет его фона изменяет цвет
+$("#login-tab input").focus(function(){
+	console.log(this);
+	$(this).css("background", "AliceBlue");
+});
+
+//при потере фокуса элементом input, находящимся внутри поля с id login-tab
+//цвет возвращается к изначальному
+$("#login-tab input").focusout(function(){
+	console.log(this);
+	$(this).css("background", "white");
+});
