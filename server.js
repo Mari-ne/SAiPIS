@@ -113,7 +113,8 @@ function getBooks(request, response) {
         mas.map(function (item) {
             var bookId = "book"+value;
             var buttonId = "but_"+value;
-            result+="<tr><td id = " +bookId+">"+item.name+"</td><td>"+item.author+"</td><td>"+item.annotation+"</td><td>"+item.description+"</td>" +
+	    var authorId = "author" + value;
+            result+="<tr><td id = " +bookId+">"+item.name+"</td><td id=" + authorId + ">"+item.author+"</td><td>"+item.annotation+"</td><td>"+item.description+"</td>" +
                 "<td><button type='button' class='btn btn-success' id = "+buttonId+" >Заказать</button></td></tr>";
             value++;
         });
