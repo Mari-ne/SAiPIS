@@ -20,13 +20,29 @@ signupBtn.addEventListener('click', function() {// если нажали на в
 //при фокусе на input'e, находящемся в поле с id login-tab
 //цвет его фона изменяет цвет
 $("#login-tab input").focus(function(){
-	console.log(this);
 	$(this).css("background", "AliceBlue");
 });
 
 //при потере фокуса элементом input, находящимся внутри поля с id login-tab
 //цвет возвращается к изначальному
 $("#login-tab input").focusout(function(){
-	console.log(this);
 	$(this).css("background", "white");
 });
+
+var error = document.getElementById('error');
+var errorLabel = document.getElementById('error-label');
+var errorClose = document.getElementById('error-close');
+errorClose.addEventListener('click', function() {
+	error.style.display = "none";
+});
+
+//функция для отображения сообщения об ошибки (ошшибка автоматически исчезнет через 10 секунд)
+//в функцию передается: message - сообщение, которое нужно вывести
+function showError(message){
+	console.log(message);
+	error.style.display = "initial";
+	errorLabel.innerHTML = message;
+	setTimeout(function() {
+		error.style.display = "none";
+	}, 10000);
+}

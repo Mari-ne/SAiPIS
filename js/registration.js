@@ -9,9 +9,7 @@ $(document).ready(function() {
             data: getFormDataForRegistration(),
             success: function(response){
                 if (response === "error"){
-                    console.log("пользователь уже существует");
-                    $("#error").css("display", "initial");
-                    $("#error").val("Вы использовали не уникальное имя и/или пароль.");
+                    showError("Пользователь с таким логином уже есть уже существует");
                 }else{
                     	console.log("регистрация прошла успешно");
 			//сохранение логина пользователя, который только что авторизировался
@@ -23,10 +21,8 @@ $(document).ready(function() {
                 }
             },
             error: function(result){
-                console.log(result);
+                showError(result);
                 console.log("error");
-                $("#error").css("display", "initial");
-                $("#error-label").val("Произошла ошибка");
             }
         });
     });

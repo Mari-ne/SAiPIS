@@ -10,9 +10,7 @@ $(document).ready(function() {
             success: function(response){
                 console.log("send");
                 if(response === "error"){
-                    console.log("не удалось войти");
-                    $("#error").css("display", "initial");
-                    $("#error").val("Ошибка входа.");
+                    showError("Не удалось войти");
                 }else{
 			sessionStorage.setItem("login", response.userLogin); //сохранение логина авторизировавшегося 
 			//пользователял в sessionStorage (это хранилище хранит данные только пока открыта вкладка)
@@ -22,7 +20,7 @@ $(document).ready(function() {
                 }
             },
             error: function(result){
-                $("#error-label").val("Произошла ошибка");
+                showError(result);
             }
         });
     });
