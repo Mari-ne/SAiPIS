@@ -15,7 +15,8 @@ var mapping = {
     '/about': getAbout, 
     '/contacts': getContacts,
     '/main': getMain,
-    '/catalog': getCatalog
+    '/catalog': getCatalog,
+    '/makeOrder': makeOrder
 };
 
 http.createServer(function(req, res){
@@ -130,6 +131,7 @@ function getAbout(request, response){
         });
 }
 
+
 function getContacts(request, response){
     databasescript.getContactInfo(function(contact){
         response.writeHead(200, {"Content-Type": "application/json"});
@@ -154,3 +156,20 @@ function getCatalog(request, response){
             return response.end();
         });
 }
+
+function makeOrder(request, response){
+    var login = url.parse(request.url, true).query.user;
+    var bookName = url.parse(request.url, true).query.bookName;
+    var author = url.parse(request.url, true).query.authorName;
+
+    databasescript.getUserId(login, function (userId) {
+        databasescript.getBookId(bookName, author, function (bookId) {
+            databasescript.addOrder(userId, bookId, function () {
+                //произошло добавление заказа в бд
+            });
+        });
+    });
+
+    response.writeHead(200, {"Content-Type": "text/html"});
+    return response.end();
+};
