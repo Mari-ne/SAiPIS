@@ -1,8 +1,12 @@
+
+
 $.ajax({
-    url: 'http://localhost:12321/getAllOrdersData',
+    url: 'http://localhost:12321/ordersCatalog',
     method: 'get',
     success: function(response){
-        document.getElementById("insertBody").innerHTML = response;
+        //получение html файла catalog.html для заполнения внутренней части 
+        //страницы main.html 
+        $("#container").append(response);
     },
     error: function(result){
         console.log(result);
@@ -10,10 +14,3 @@ $.ajax({
     }
 });
 
-
-
-$("#about").click(function(){
-	//при нажатии на кнопку #about происходит переход по адресу localhost:12321/about
-	//новая страница открывается в той же вкладке (параметр _self)
-	window.open('http://localhost:12321/about', '_self');
-})
