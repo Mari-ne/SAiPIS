@@ -6,7 +6,7 @@ $(document).ready(function() {
         $.ajax({
             url: 'http://localhost:12321/registration',
             method: 'get',
-            data: getFormDataForRegistration(),
+            data: getFormDataForRegistration(), // данные для регистрации
             success: function(response){
                 if (response === "error"){
                     showError("Пользователь с таким логином уже есть уже существует");

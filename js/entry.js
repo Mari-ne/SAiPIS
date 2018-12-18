@@ -1,5 +1,5 @@
 try{
-	sessionStorage.clear();
+	sessionStorage.clear();//очищаем текущего пользователя
 }
 catch(err){
 	;
@@ -13,10 +13,10 @@ $(document).ready(function() {
         $.ajax({
             url: 'http://localhost:12321/entry',
             method: 'get',
-            data: getFormDataForEntry(),
+            data: getFormDataForEntry(),//данные о пользователе
             success: function(response){
                 console.log("send");
-                if(response === "error"){
+                if(response === "error"){//не совпадают данные с данными в бд
                     showError("Не удалось войти");
                 }else{
 			sessionStorage.setItem("login", response.userLogin); //сохранение логина авторизировавшегося 

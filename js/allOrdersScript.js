@@ -1,16 +1,11 @@
-
-
 $.ajax({
-    url: 'http://localhost:12321/ordersCatalog',
-    method: 'get',
+    url: 'http://localhost:12321/getAllOrdersData',
+    method: 'get', // данные передадутся не текстом запроса
     success: function(response){
-        //получение html файла catalog.html для заполнения внутренней части 
-        //страницы main.html 
-        $("#container").append(response);
+        document.getElementById("insertBody").innerHTML = response; // вставка разметки внутрь блока
     },
     error: function(result){
         console.log(result);
         console.log("error");
     }
 });
-
