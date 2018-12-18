@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Каталог</title>
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<!--table-responsive сделает таблицу более адаптивной (в bootstrap все адаптивное, но это делает еще лучше), при очень маленьком
+размере экрана появятся скролы, чтобы ее прокручивать. Это свойство обязательно нужно писать в какой-то div, а не в тег table-->
+
+    <div class="table-responsive">
+            <!--table делает таблицу растянутой по странице и визуальнее красивее стандартной-->
+            <!--table-hover подсвечивает строку таблицы при наведении-->
+            <!--table-bordered делает границы между ячейками-->
+            <!--table-striped делает чередование цветов строк-->
+            <!--table-condensed если таблица большая, то удобно применить, тк отступы станут меньше -->
+            <table class="table table-hover">
+                <thead>
+                <!--далее будут классы и для текста подходить, а не только для ячеек таблиц-->
+                <!--active сделает цвет заголовка серым-->
+                <!--success сделает цвет фона зеленым-->
+                <!--info сделает цвет фона синим-->
+                <!--warning сделает цвет фона цвет желтым-->
+                <!--danger сделает цвет фона красным -->
+                    <tr class="success">
+                        <th>Номер заказа</th>
+                        <th>Логин пользователя
+                            сделавшего заказ
+                        </th>
+                        <th>Название</th>
+                        <th>Автор</th>
+                        <th>Дата</th>
+                    </tr>
+                </thead>
+                <tbody id = "insertBody">
+        
+                </tbody>
+            </table>
+        </div>
+</div>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/allOrdersPage.js"></script>
+</body>
+</html>
