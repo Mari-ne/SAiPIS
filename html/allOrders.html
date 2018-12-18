@@ -1,35 +1,43 @@
-<!DOCTYPE html>
-<html lang="ru" id="main">
+﻿<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Главная страница</title>
-	<link rel="stylesheet" href="../css/sideNav.css">
+    <title>Каталог</title>
     <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row header" id="header-big">
-        <div class="logo">
-                <img src="../img/logo.svg" alt="Логотип" class="logo-img">
-        </div>
-    </div>
+<!--table-responsive сделает таблицу более адаптивной (в bootstrap все адаптивное, но это делает еще лучше), при очень маленьком
+размере экрана появятся скролы, чтобы ее прокручивать. Это свойство обязательно нужно писать в какой-то div, а не в тег table-->
+<div class="table-responsive">
+    <!--table делает таблицу растянутой по странице и визуальнее красивее стандартной-->
+    <!--table-hover подсвечивает строку таблицы при наведении-->
+    <!--table-bordered делает границы между ячейками-->
+    <!--table-striped делает чередование цветов строк-->
+    <!--table-condensed если таблица большая, то удобно применить, тк отступы станут меньше -->
+    <table class="table table-hover">
+        <thead>
+        <!--далее будут классы и для текста подходить, а не только для ячеек таблиц-->
+        <!--active сделает цвет заголовка серым-->
+        <!--success сделает цвет фона зеленым-->
+        <!--info сделает цвет фона синим-->
+        <!--warning сделает цвет фона цвет желтым-->
+        <!--danger сделает цвет фона красным -->
+            <tr class="success">
+                <th>Пользователь</th>
+                <th>Автор</th>
+                <th>Книга</th>
+                <th>Дата заказа</th>
+            </tr>
+        </thead>
+        <tbody id = "insertBody">
+		<!--сюда будут вставлены данные с сервера -->
+        </tbody>
+    </table>
 </div>
-<div class = "sidenav container">
- 	<a href="/main">Каталог</a>
-  	<a href="/privatePage">Профиль</a>
-	<a href="/orders">Заказы</a>
-	<a href="/about">О нас</a>
-	<a href="/">Выйти</a>
-</div>
-<div class="container" id="container">
-    <div id="post-container"></div>
-    <div id="pagination"></div>
-</div>
-
 <script src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-<script src="../js/allOrdersScript.js"></script>
+<script src="../js/allOrdersScript.js"></script><!--заполняет таблицу-->
 </body>
 </html>

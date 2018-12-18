@@ -1,0 +1,12 @@
+table(class="table table-hover")
+  thead
+    tr(class="success")
+      th Автор
+      th Книга
+      th Дата Заказа
+  tbody
+    each post, i in mass
+      tr
+        td #{post.bookInfo.author}
+        td #{post.bookInfo.name}
+        td #{post.date}
